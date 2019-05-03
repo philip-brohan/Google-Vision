@@ -55,6 +55,15 @@ def b2t(bb):
     result[1]=numpy.mean(vertices[:,1])
     return result
     
+bp=matplotlib.patches.Polygon(numpy.array([[0,0],[1,0],[1,1],[0,1]]),
+                  closed=True,
+                  edgecolor=(0,0,0,1),
+                  facecolor=(0,0,0,0.2),
+                  fill=True,
+                  linewidth=0.2,
+                  alpha=0.05,
+                  zorder=0)
+ax_result.add_patch(bp)
 for page in document.pages:
     for block in page.blocks:
         for paragraph in block.paragraphs:
