@@ -1,0 +1,118 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Sample from the Argentine Daily Weather Reports &#8212; Testing Google Vision for weather data rescue</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Script to run Google Vision" href="run_gcv.html" />
+    <link rel="prev" title="Plot the block layout" href="../Second_order/plot_polygons.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="run_gcv.html" title="Script to run Google Vision"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../Second_order/plot_polygons.html" title="Plot the block layout"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Google Vision tests</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/US_map.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Ben_Nevis/text.html">Sample from the Weatherrescue Ben Nevis project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Second_order/text.html">Sample from the UK Second Order Stations Books</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Sample from the Argentine Daily Weather Reports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Observatories/text.html">Sample from the UK Observatories Year Book</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DWR_1901/text.html">Sample from the UK Daily Weather Reports (1901)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DWR_1862/text.html">Sample from the UK Daily Weather Reports (1862)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../IDWR/text.html">Sample from the Indian Daily Weather Reports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../US_map/text.html">Sample from the US Manual Analysis maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Farragut/text.html">Sample from the logbook of USS Farragut</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Jeannette/text.html">Sample from the logbook of USS Jeannette</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../credits.html">Small Print</a></li>
+</ul>
+<h3><a href="https://github.com/philip-brohan/Google-Vision">Get the source code</a></h3>
+
+<a href="https://github.com/philip-brohan/Google-Vision"
+           rel="nofollow">Github source repository</a>
+
+<h3>Found a bug, or have a suggestion?</h3>
+
+Please <a href="https://github.com/philip-brohan/Google-Vision/issues/new">raise an issue</a>.
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="sample-from-the-argentine-daily-weather-reports">
+<h1>Sample from the Argentine Daily Weather Reports<a class="headerlink" href="#sample-from-the-argentine-daily-weather-reports" title="Permalink to this headline">¶</a></h1>
+<p>Daily Weather Reports are collections of telegraph observations used to make daily synoptic weathermaps. Argentina started producing them in 1902, and their series has the advantage of being printed. The Argentine DWRs are being <a class="reference external" href="http://brohan.org/station-data/sources/Argentine_DWR/index.html">worked on through the Copernicus Data Rescue Service</a>, but the bulk of them are not yet digitised.</p>
+<div class="figure align-center" id="id1" style="width: 95%">
+<a class="reference internal image-reference" href="../../_images/Argentine_DWR_text.png"><img alt="../../_images/Argentine_DWR_text.png" src="../../_images/Argentine_DWR_text.png" style="width: 95%;" /></a>
+<p class="caption"><span class="caption-text"><a class="reference external" href="http://s3-eu-west-1.amazonaws.com/textract.samples/103.jpg">Argentine DWR sample image</a>, alongside the text blocks produced by Google Vision.</span></p>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="run_gcv.html">Script to run Google Vision</a></li>
+<li class="toctree-l1"><a class="reference internal" href="show_output.html">Google Vision output (as JSON)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="plot_text.html">Script to plot comparison figure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="polygons.html">A closer look at the block layout</a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="run_gcv.html" title="Script to run Google Vision"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../Second_order/plot_polygons.html" title="Plot the block layout"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Google Vision tests</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    </div>
+  </body>
+</html>

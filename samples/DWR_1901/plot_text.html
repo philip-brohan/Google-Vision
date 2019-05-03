@@ -1,0 +1,211 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Script to plot comparison figure &#8212; Testing Google Vision for weather data rescue</title>
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="A closer look at the block layout" href="polygons.html" />
+    <link rel="prev" title="Google Vision output (as JSON)" href="show_output.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="polygons.html" title="A closer look at the block layout"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="show_output.html" title="Google Vision output (as JSON)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Google Vision tests</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="text.html" accesskey="U">Sample from the UK Daily Weather Reports (1901)</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/US_map.png" alt="Logo"/>
+            </a></p>
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Ben_Nevis/text.html">Sample from the Weatherrescue Ben Nevis project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Second_order/text.html">Sample from the UK Second Order Stations Books</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Argentine_DWR/text.html">Sample from the Argentine Daily Weather Reports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Observatories/text.html">Sample from the UK Observatories Year Book</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="text.html">Sample from the UK Daily Weather Reports (1901)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../DWR_1862/text.html">Sample from the UK Daily Weather Reports (1862)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../IDWR/text.html">Sample from the Indian Daily Weather Reports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../US_map/text.html">Sample from the US Manual Analysis maps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Farragut/text.html">Sample from the logbook of USS Farragut</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Jeannette/text.html">Sample from the logbook of USS Jeannette</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../credits.html">Small Print</a></li>
+</ul>
+<h3><a href="https://github.com/philip-brohan/Google-Vision">Get the source code</a></h3>
+
+<a href="https://github.com/philip-brohan/Google-Vision"
+           rel="nofollow">Github source repository</a>
+
+<h3>Found a bug, or have a suggestion?</h3>
+
+Please <a href="https://github.com/philip-brohan/Google-Vision/issues/new">raise an issue</a>.
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="script-to-plot-comparison-figure">
+<h1>Script to plot comparison figure<a class="headerlink" href="#script-to-plot-comparison-figure" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="c1"># Plot a comparison of original image and transcription results.</span>
+
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="k">import</span> <span class="n">Image</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_agg</span> <span class="k">import</span> \
+             <span class="n">FigureCanvasAgg</span> <span class="k">as</span> <span class="n">FigureCanvas</span>
+<span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="k">import</span> <span class="n">Figure</span>
+<span class="kn">import</span> <span class="nn">matplotlib.patches</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="c1"># We&#39;re going to need the original image</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;../../../samples/DWR_1901_03_left.jpg&quot;</span><span class="p">)</span>
+<span class="n">imwidth</span><span class="p">,</span> <span class="n">imheight</span> <span class="o">=</span> <span class="n">im</span><span class="o">.</span><span class="n">size</span>
+
+<span class="n">fig</span><span class="o">=</span><span class="n">Figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">im</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span><span class="o">*</span><span class="mf">1.06</span><span class="p">,</span>
+                    <span class="p">(</span><span class="mi">1</span><span class="o">*</span><span class="n">im</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span><span class="o">*</span><span class="mf">1.04</span><span class="p">),</span>
+       <span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+       <span class="n">facecolor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.88</span><span class="p">,</span><span class="mf">0.88</span><span class="p">,</span><span class="mf">0.88</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+       <span class="n">edgecolor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+       <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+       <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+       <span class="n">subplotpars</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+       <span class="n">tight_layout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">ax_original</span><span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.02</span><span class="p">,</span><span class="mf">0.02</span><span class="p">,</span><span class="mf">0.47</span><span class="p">,</span><span class="mf">0.96</span><span class="p">])</span>
+<span class="n">ax_result</span><span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.51</span><span class="p">,</span><span class="mf">0.02</span><span class="p">,</span><span class="mf">0.47</span><span class="p">,</span><span class="mf">0.96</span><span class="p">])</span>
+<span class="c1"># Matplotlib magic</span>
+<span class="n">canvas</span><span class="o">=</span><span class="n">FigureCanvas</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+<span class="c1"># Turn off the axis tics</span>
+<span class="n">ax_original</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">ax_result</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+
+<span class="c1"># Put the original image in its half of the figure</span>
+<span class="n">ax_original</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+
+<span class="c1"># Load the JSON from Textract for this image</span>
+<span class="n">document</span><span class="o">=</span><span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span> <span class="nb">open</span><span class="p">(</span> <span class="s2">&quot;detection.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span> <span class="p">)</span> <span class="p">)</span>
+
+<span class="c1"># Convert box vertex list to numpy array for matplotlib</span>
+<span class="k">def</span> <span class="nf">bb2p</span><span class="p">(</span><span class="n">bb</span><span class="p">):</span>
+    <span class="n">result</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">vertices</span><span class="p">),</span><span class="mi">2</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bb</span><span class="o">.</span><span class="n">vertices</span><span class="p">)):</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">bb</span><span class="o">.</span><span class="n">vertices</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="o">/</span><span class="n">imwidth</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="mf">1.0</span><span class="o">-</span><span class="n">bb</span><span class="o">.</span><span class="n">vertices</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="o">/</span><span class="n">imheight</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># Get bounding box centroid for text</span>
+<span class="k">def</span> <span class="nf">b2t</span><span class="p">(</span><span class="n">bb</span><span class="p">):</span>
+    <span class="n">vertices</span><span class="o">=</span><span class="n">bb2p</span><span class="p">(</span><span class="n">bb</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">vertices</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">result</span>
+    
+<span class="n">bp</span><span class="o">=</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">patches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]]),</span>
+                  <span class="n">closed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                  <span class="n">edgecolor</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+                  <span class="n">facecolor</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">),</span>
+                  <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                  <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                  <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                  <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ax_result</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">bp</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">document</span><span class="o">.</span><span class="n">pages</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">paragraph</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">paragraphs</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">paragraph</span><span class="o">.</span><span class="n">words</span><span class="p">:</span>
+                <span class="n">bp</span><span class="o">=</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">patches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">bb2p</span><span class="p">(</span><span class="n">word</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">),</span>
+                                  <span class="n">closed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                  <span class="n">edgecolor</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+                                  <span class="n">facecolor</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">),</span>
+                                  <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                  <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                                  <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                                  <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+                <span class="n">ax_result</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">bp</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">word</span><span class="o">.</span><span class="n">symbols</span><span class="p">:</span>
+                    <span class="n">bp</span><span class="o">=</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">patches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">bb2p</span><span class="p">(</span><span class="n">symbol</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">),</span>
+                                  <span class="n">closed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                  <span class="n">edgecolor</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.01</span><span class="p">),</span>
+                                  <span class="n">facecolor</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.2</span><span class="p">),</span>
+                                  <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                  <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                                  <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                                  <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+                    <span class="n">ax_result</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">bp</span><span class="p">)</span>
+                <span class="c1"># Text</span>
+                    <span class="n">charsize</span><span class="o">=</span><span class="mi">24</span>
+                    <span class="n">txt_centroid</span><span class="o">=</span><span class="n">b2t</span><span class="p">(</span><span class="n">symbol</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">)</span>
+                    <span class="n">angle</span><span class="o">=</span><span class="mi">0</span>
+                    <span class="c1">#if (block[&#39;Geometry&#39;][&#39;BoundingBox&#39;][&#39;Height&#39;] &gt;</span>
+                    <span class="c1">#    block[&#39;Geometry&#39;][&#39;BoundingBox&#39;][&#39;Width&#39;]*2):</span>
+                    <span class="c1">#    angle=90</span>
+                    <span class="n">ax_result</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">txt_centroid</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">txt_centroid</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                   <span class="n">symbol</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+                                   <span class="n">fontsize</span><span class="o">=</span><span class="n">charsize</span><span class="p">,</span>
+                                   <span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                                   <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                                   <span class="n">rotation</span><span class="o">=</span><span class="n">angle</span><span class="p">)</span>    
+
+<span class="c1"># Draw the image</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;DWR_1901_text.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="polygons.html" title="A closer look at the block layout"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="show_output.html" title="Google Vision output (as JSON)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Google Vision tests</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="text.html" >Sample from the UK Daily Weather Reports (1901)</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    </div>
+  </body>
+</html>
