@@ -1,5 +1,5 @@
 Testing Google Vision for weather data rescue
-============================================
+=============================================
 
 As `AWS Textract looks promising as a tool for data rescue <http://brohan.org/AWS-Textract/>`_, it's worth trying `Google Vision <https://cloud.google.com/vision/>`_ in the same way.
 
@@ -10,6 +10,7 @@ As `AWS Textract looks promising as a tool for data rescue <http://brohan.org/AW
 ..
    Getting started with Textract <install>
    
+
 I tested Google Vision on sample images from several different documents containing weather observations we need to transcribe. All were somewhat successful, though the level of success varied:
    
 .. toctree::
@@ -26,15 +27,15 @@ I tested Google Vision on sample images from several different documents contain
    samples/Farragut/text
    samples/Jeannette/text
    
-..
- As the image modification produced reasonable results on the :doc:`Ben Nevis project sample <image_processing/Ben_Nevis/modified>`, it was possible to run Textract against the `OCR-weatherrescue transcription benchmark <http://brohan.org/OCR-weatherrescue/index.html>`_:
+
+As the systemproduced reasonable results on the :doc:`Ben Nevis project sample <samples/Ben_Nevis/text>`, it was possible to run Google Vision against the `OCR-weatherrescue transcription benchmark <http://brohan.org/OCR-weatherrescue/index.html>`_:
+
 
 .. toctree::
    :titlesonly:
    :maxdepth: 1
 
-..
- OCR-weatherrescue/months
+   OCR-weatherrescue/months
 
 Results are qualitatively similar to those from  `AWS Textract <http://brohan.org/AWS-Textract/>`_.
 

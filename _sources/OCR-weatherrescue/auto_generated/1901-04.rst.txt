@@ -1,0 +1,28 @@
+:orphan:
+
+Google Vision results for the OCR-weatherrescue benchmark 1901-04
+===================================================================
+
+.. figure:: ../../../analyses/OCR-weatherrescue/1901-04.png
+   :width: 95%
+   :align: center
+   :figwidth: 95%
+
+   Google Vision results for `this month in the benchmark  <http://brohan.org/OCR-weatherrescue/individual_months/1903-11.html>`_. Green blocks are entries sucessfully read. Filled red blocks are entries inacurately read, and hatched red blocks are entries missed altogether.
+
+Of 720 entries:
+ * 560 (78%) were read successfully,
+ * 80 (11%) were read inaccurately,
+ * 80 (11%) were missed altogether.
+
+ 
+|
+
+.. toctree::    
+   :maxdepth: 1 
+   :titlesonly: 
+
+   ../scripts/make_comparison 
+   ../scripts/run_textract 
+   ../scripts/oplot_cluster 
+
